@@ -1,6 +1,11 @@
 dist: trusty
 sudo: false
 
+matrix:
+  include:
+    - os: osx
+    - os: linux
+
 language: csharp
 mono: none
 dotnet: 2.1.300
