@@ -2,7 +2,15 @@ build_script:
 - dotnet --version
 - dotnet restore
 - dotnet build -c Release
+- cd libpng-sharp
+- dotnet pack -c Release
+- cd ..
 
 test_script:
-- cd Benchmarks
+- cd libpng-sharp.Tests
+- dotnet test
+- cd ../Benchmarks
 - dotnet run -c Release
+
+artifacts:
+- path: '**\*.nupkg'
