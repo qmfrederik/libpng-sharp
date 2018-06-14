@@ -16,4 +16,14 @@
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.23" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- win7-x64 files which come from VcPkg packages;
+         we don't really do x86 and macOS and Linux should get
+         the libpng(-dev) package from Homebrew/their package managers -->
+    <Content Include="$(MSBuildThisFileDirectory)/../Benchmarks/*.dll">
+      <PackagePath>runtimes/win7-x64/native/%(Filename)%(Extension)</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>
