@@ -16,7 +16,7 @@ install:
 
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; add-apt-repository ppa:quamotion/ppa; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; apt-get update; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; apt-get install -y libgdiplus; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; apt-get install -y libgdiplus libpng-dev; fi
 
 script:
 - dotnet --version

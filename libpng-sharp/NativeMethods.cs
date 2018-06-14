@@ -5,7 +5,7 @@ namespace libpngsharp
 {
     internal class NativeMethods
     {
-        private const string Library = "libpng16.dll";
+        private const string Library = "png16";
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr png_get_libpng_ver(IntPtr png_ptr);
