@@ -11,6 +11,7 @@ namespace libpngsharp
         IntPtr pngPtr;
         IntPtr infoPtr;
         IntPtr endInfoPtr = IntPtr.Zero;
+        NativeMethods.png_rw readCallback;
 
         public PngDecoder(Stream stream)
         {
@@ -28,8 +29,8 @@ namespace libpngsharp
             ThrowOnZero(this.infoPtr);
 
             // Set the callback function
-            var callback = new NativeMethods.png_rw(this.Read);
-            NativeMethods.png_set_read_fn(this.pngPtr, IntPtr.Zero, callback);
+            this.readCallback = new NativeMethods.png_rw(this.Read);
+            NativeMethods.png_set_read_fn(this.pngPtr, IntPtr.Zero, this.readCallback);
 
             // Get basic image properties.
             // This will process all chunks up to but not including the image data.
