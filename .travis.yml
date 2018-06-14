@@ -22,5 +22,7 @@ script:
 - dotnet --version
 - dotnet restore
 - dotnet build -c Release
-- cd Benchmarks
+- cd libpng-sharp.Tests
+- dotnet test
+- cd ../Benchmarks
 - dotnet run -c Release
