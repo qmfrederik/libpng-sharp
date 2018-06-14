@@ -1,0 +1,13 @@
+dist: trusty
+sudo: false
+
+language: csharp
+mono: none
+dotnet: 2.1.300
+
+script:
+- dotnet --version
+- dotnet restore
+- dotnet build -c Release
+- cd Benchmarks
+- dotnet run -c Release
