@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -267,8 +268,22 @@ namespace libpngsharp
 
         private void Read(IntPtr png_ptr, void* outBytes, uint byteCountToRead)
         {
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+            byte[] buffer = null;
+
+            try
+            {
+                buffer = ArrayPool<byte>.Shared.Rent((int)byteCountToRead);
+                this.Stream.Read(buffer, 0, (int)byteCountToRead);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+#else
             Span<byte> target = new Span<byte>(outBytes, (int)byteCountToRead);
             this.Stream.Read(target);
+#endif
         }
 
         private void OnError(IntPtr png_structp, IntPtr png_const_charp)
