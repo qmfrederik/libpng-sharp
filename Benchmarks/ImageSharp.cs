@@ -1,4 +1,5 @@
 ﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using System.IO;
 
 namespace Benchmarks
@@ -16,7 +17,7 @@ namespace Benchmarks
 
             for (int n = 0; n < N; n++)
             {
-                var image = Image.Load(data);
+                var image = Image.Load<Bgr24>(data);
                 image.Frames.RootFrame.SavePixelData(buffer);
             }
 

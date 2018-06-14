@@ -33,8 +33,8 @@ namespace libpngsharp.Tests
             SHA1 hasher = SHA1.Create();
             var hash = hasher.ComputeHash(data);
             var hashString = string.Join("", hash.Select(c => c.ToString("x2")));
-
-            // Different pixel format
+            
+            Assert.Equal(2181120, data.Length);
             Assert.Equal("43e046fbb27bfc352c6007247380966dc92f25e0", hashString);
         }
     }
