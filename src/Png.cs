@@ -12,7 +12,7 @@ namespace libpngsharp
             set;
         }
 
-        public void Decode()
+        public unsafe void Decode()
         {
             // C# equivalent of:
             // http://zarb.org/~gc/html/libpng.html
@@ -35,7 +35,8 @@ namespace libpngsharp
 
             var width = NativeMethods.png_get_image_width(png_ptr, info_ptr);
             var height = NativeMethods.png_get_image_height(png_ptr, info_ptr);
-            var color_type = NativeMethods.png_get_color_type(png_ptr, info_ptr);
+            var color_type = (PngColorType)NativeMethods.png_get_color_type(png_ptr, info_ptr);
+            var channels = NativeMethods.png_get_channels(png_ptr, info_ptr);
             var bit_depth = NativeMethods.png_get_bit_depth(png_ptr, info_ptr);
 
             var number_of_passes = NativeMethods.png_set_interlace_handling(png_ptr);
@@ -62,14 +63,14 @@ namespace libpngsharp
 
             byte[] data = new byte[cb];
             Marshal.Copy(raw_data, data, 0, cb);
+
+            GC.KeepAlive(callback);
         }
 
-        private void Read(IntPtr png_ptr, IntPtr outBytes, uint byteCountToRead)
+        private unsafe void Read(IntPtr png_ptr, void* outBytes, uint byteCountToRead)
         {
-            byte[] buffer = new byte[byteCountToRead];
-            this.Stream.Read(buffer, 0, (int)byteCountToRead);
-
-            Marshal.Copy(buffer, 0, outBytes, (int)byteCountToRead);
+            Span<byte> target = new Span<byte>(outBytes, (int)byteCountToRead);
+            this.Stream.Read(target);
         }
 
         private void OnError(IntPtr png_structp, IntPtr png_const_charp)

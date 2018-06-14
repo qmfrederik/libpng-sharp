@@ -30,7 +30,10 @@ namespace libpngsharp
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         public static extern byte png_get_color_type(IntPtr png_ptr, IntPtr info_ptr);
-        
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern byte png_get_channels(IntPtr png_ptr, IntPtr info_ptr);
+
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         public static extern byte png_get_bit_depth(IntPtr png_ptr, IntPtr info_ptr);
 
@@ -46,7 +49,7 @@ namespace libpngsharp
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint png_get_rowbytes(IntPtr png_ptr, IntPtr info_ptr);
 
-        public delegate void png_rw(IntPtr png_ptr, IntPtr outBytes, uint byteCountToRead);
+        public unsafe delegate void png_rw(IntPtr png_ptr, void* outBytes, uint byteCountToRead);
 
         public delegate void png_error(IntPtr png_structp, IntPtr png_const_charp);
     }
