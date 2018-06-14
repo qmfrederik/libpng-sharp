@@ -21,20 +21,10 @@ namespace Benchmarks
                 {
                     var imageData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
 
-                    // Here we loop through each line and make sure it is padded to
-                    // the stride length
-                    var bytesPerLine = image.Width * 6;
                     for (int i = 0; i < image.Height; i++)
                     {
                         IntPtr offset = imageData.Scan0 + i * imageData.Stride;
-                        Marshal.Copy(data, i * bytesPerLine, offset, bytesPerLine);
-                        int padding = imageData.Stride - bytesPerLine;
-
-                        if (padding > 0)
-                        {
-                            var pad = new byte[padding];
-                            Marshal.Copy(pad, 0, offset + bytesPerLine, padding);
-                        }
+                        Marshal.Copy(offset, data, i * imageData.Stride, imageData.Stride);
                     }
 
                     image.UnlockBits(imageData);
