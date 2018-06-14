@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\libpng-sharp.csproj" />
+    <ProjectReference Include="..\libpng-sharp\libpng-sharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
