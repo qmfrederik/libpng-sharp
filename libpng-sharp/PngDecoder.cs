@@ -52,49 +52,73 @@ namespace libpngsharp
             private set;
         }
 
+        /// <summary>
+        /// Gets the image width in pixels.
+        /// </summary>
         public int Width
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the image height in pixels.
+        /// </summary>
         public int Height
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the image color type.
+        /// </summary>
         public PngColorType ColorType
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the number of color channels in the image.
+        /// </summary>
         public int Channels
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the image bit depth.
+        /// </summary>
         public int BitDepth
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the version of libpng.
+        /// </summary>
         public string Version
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the number of bytes in a row.
+        /// </summary>
         public int BytesPerRow
         {
             get;
             private set;
         }
 
-        public int BufferSize
+        /// <summary>
+        /// Gets the size of the decompressed image.
+        /// </summary>
+        public int DecompressedSize
         {
             get
             {
@@ -102,6 +126,13 @@ namespace libpngsharp
             }
         }
 
+        /// <summary>
+        /// Decodes the image into a decompressed buffer.
+        /// </summary>
+        /// <param name="buffer">
+        /// A buffer into which to decompress the image. The length of this
+        /// buffer must be at least <see cref="DecompressedSize"/>.
+        /// </param>
         public void Decode(byte[] buffer)
         {
             // C# equivalent of:
@@ -130,6 +161,103 @@ namespace libpngsharp
             NativeMethods.png_read_end(this.pngPtr, IntPtr.Zero);
         }
 
+        /// <summary>
+        /// Transforms paletted images to RGB.
+        /// </summary>
+        public void TransformPaletteToRgb()
+        {
+            NativeMethods.png_set_palette_to_rgb(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Transforms grayscale images of less than 8 to 8 bits
+        /// </summary>
+        public void TransformGrayTo8()
+        {
+            NativeMethods.png_set_gray_1_2_4_to_8(this.pngPtr);
+        }
+
+        /// <summary>
+        /// For files with 16 bits per channel, strips the pixels down to 8 bit.
+        /// </summary>
+        public void TransformStrip16()
+        {
+            NativeMethods.png_set_strip_16(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Removes the alpha channel.
+        /// </summary>
+        public void TranformStripAlpha()
+        {
+            NativeMethods.png_set_strip_alpha(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Inverts the alpha channel, so that it represents transparancy instead of opacity.
+        /// </summary>
+        public void TransformInvertAlpha()
+        {
+            NativeMethods.png_set_invert_alpha(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Expands to 1 pixel per byte.
+        /// </summary>
+        public void TransformSetPacking()
+        {
+            NativeMethods.png_set_packing(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Changes the storage of pixels to blue, green, red.
+        /// </summary>
+        public void TransformSetBgr()
+        {
+            NativeMethods.png_set_bgr(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Transforms the data to ARGB instead of the normal PNG format RGBA.
+        /// </summary>
+        public void TransformSwapAlpha()
+        {
+            NativeMethods.png_set_swap_alpha(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Represents a grayscal image as a RGB image.
+        /// </summary>
+        public void TransformGrayToRgb()
+        {
+            NativeMethods.png_set_gray_to_rgb(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Inverts the black and white pixels in a monochrome image.
+        /// </summary>
+        public void TransformInvertMono()
+        {
+            NativeMethods.png_set_invert_mono(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Changes the pixel byte order for 16-bit pixels from bit-endian to little-endian.
+        /// </summary>
+        public void TransformSwap()
+        {
+            NativeMethods.png_set_swap(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Swaps the onder in which pixels are packed into bytes.
+        /// </summary>
+        public void TransformPackswap()
+        {
+            NativeMethods.png_set_packswap(this.pngPtr);
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
             NativeMethods.png_destroy_read_struct(ref this.pngPtr, ref this.infoPtr, ref this.endInfoPtr);

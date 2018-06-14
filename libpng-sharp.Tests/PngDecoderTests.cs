@@ -15,7 +15,7 @@ namespace libpngsharp.Tests
             using (PngDecoder decoder = new PngDecoder(stream))
             {
                 Assert.Equal(8, decoder.BitDepth);
-                Assert.Equal(0x00214800, decoder.BufferSize);
+                Assert.Equal(0x00214800, decoder.DecompressedSize);
                 Assert.Equal(0x780, decoder.BytesPerRow);
                 Assert.Equal(3, decoder.Channels);
                 Assert.Equal(PngColorType.RGB, decoder.ColorType);
@@ -24,15 +24,14 @@ namespace libpngsharp.Tests
                 Assert.Equal("1.6.34", decoder.Version);
                 Assert.Equal(640, decoder.Width);
 
-                byte[] data = new byte[decoder.BufferSize];
+                byte[] data = new byte[decoder.DecompressedSize];
+                decoder.TransformSetBgr();
                 decoder.Decode(data);
 
                 SHA1 hasher = SHA1.Create();
                 var hash = hasher.ComputeHash(data);
                 var hashString = string.Join("", hash.Select(c => c.ToString("x2")));
-                Assert.Equal("93f4adc02e4c8e1215a523c7a8f0641afe2b5eb3", hashString);
-
-                File.WriteAllBytes("png.raw", data);
+                Assert.Equal("43e046fbb27bfc352c6007247380966dc92f25e0", hashString);
             }
         }
     }

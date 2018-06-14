@@ -11,14 +11,17 @@ namespace Benchmarks
 
         public static byte[] DecompressImage()
         {
-            PngDecoder png = new PngDecoder();
-            png.Stream = File.OpenRead(FileName);
             byte[] buffer = new byte[BufferSize];
 
-            for (int i = 0; i < N; i++)
+            using (Stream stream = File.OpenRead(FileName))
             {
-                png.Stream.Position = 0;
-                png.Decode(buffer);
+                for (int i = 0; i < N; i++)
+                {
+                    stream.Position = 0;
+                    PngDecoder png = new PngDecoder(stream);
+                    png.TransformSetBgr();
+                    png.Decode(buffer);
+                }
             }
 
             return buffer;

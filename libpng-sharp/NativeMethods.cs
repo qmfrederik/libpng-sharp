@@ -204,6 +204,42 @@ namespace libpngsharp
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         public static extern void png_free(IntPtr png_ptr, IntPtr ptr);
 
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_palette_to_rgb(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_gray_1_2_4_to_8(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_strip_16(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_strip_alpha(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_invert_alpha(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_packing(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_bgr(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_swap_alpha(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_gray_to_rgb(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_invert_mono(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_swap(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_packswap(IntPtr png_ptr);
+
         public unsafe delegate void png_rw(IntPtr png_ptr, void* outBytes, uint byteCountToRead);
 
         public delegate void png_error(IntPtr png_structp, IntPtr png_const_charp);

@@ -31,8 +31,6 @@ namespace libpngsharp.Tests
                 image.UnlockBits(imageData);
             }
 
-            File.WriteAllBytes("drawing.raw", data);
-
             SHA1 hasher = SHA1.Create();
             var hash = hasher.ComputeHash(data);
             var hashString = string.Join("", hash.Select(c => c.ToString("x2")));
