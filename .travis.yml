@@ -1,5 +1,5 @@
 dist: trusty
-sudo: false
+sudo: true
 
 matrix:
   include:
@@ -9,6 +9,14 @@ matrix:
 language: csharp
 mono: none
 dotnet: 2.1.300
+
+install:
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install mono-libgdiplus libpng; fi
+
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; add-apt-repository ppa:quamotion/ppa; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; apt-get update; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; apt-get install -y libgdiplus; fi
 
 script:
 - dotnet --version
