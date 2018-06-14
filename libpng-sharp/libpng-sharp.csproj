@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
+    <Authors>Frederik Carlier, Quamotion bvba</Authors>
+    <Company>Quamotion bvba</Company>
+    <PackageProjectUrl>https://github.com/qmfrederik/libpng-sharp</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/qmfrederik/libpng-sharp/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/qmfrederik/libpng-sharp</RepositoryUrl>
+    <Description>A .NET wrapper for libpng</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
