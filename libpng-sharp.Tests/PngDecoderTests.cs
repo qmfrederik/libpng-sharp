@@ -27,7 +27,6 @@ namespace libpngsharp.Tests
                 Assert.NotNull(decoder.Version);
                 var version = new Version(decoder.Version);
                 Assert.Equal(1, version.Major);
-                Assert.Equal(16, version.Minor);
 
                 Assert.Equal(640, decoder.Width);
 
