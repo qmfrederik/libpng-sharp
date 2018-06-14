@@ -21,7 +21,14 @@ namespace libpngsharp.Tests
                 Assert.Equal(PngColorType.RGB, decoder.ColorType);
                 Assert.Equal(1136, decoder.Height);
                 Assert.Equal(stream, decoder.Stream);
-                Assert.Equal("1.6.34", decoder.Version);
+
+                // The revision can differ, e.g. 1.16.34 on Windows and 1.16.20 on Ubuntu Xenial, so don't check the
+                // entire string.
+                Assert.NotNull(decoder.Version);
+                var version = new Version(decoder.Version);
+                Assert.Equal(1, version.Major);
+                Assert.Equal(16, version.Minor);
+
                 Assert.Equal(640, decoder.Width);
 
                 byte[] data = new byte[decoder.DecompressedSize];
