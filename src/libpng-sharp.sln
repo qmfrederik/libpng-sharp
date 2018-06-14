@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libpng-sharp", "libpng-sharp.csproj", "{AB14C9F2-E223-4E58-9DC2-222E83E79D5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libpng-sharp", "libpng-sharp.csproj", "{AB14C9F2-E223-4E58-9DC2-222E83E79D5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "..\Benchmarks\Benchmarks.csproj", "{9384F99B-24AE-4B35-98AE-92AA7DD58FC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{AB14C9F2-E223-4E58-9DC2-222E83E79D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB14C9F2-E223-4E58-9DC2-222E83E79D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB14C9F2-E223-4E58-9DC2-222E83E79D5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9384F99B-24AE-4B35-98AE-92AA7DD58FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9384F99B-24AE-4B35-98AE-92AA7DD58FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9384F99B-24AE-4B35-98AE-92AA7DD58FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9384F99B-24AE-4B35-98AE-92AA7DD58FC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {171A753A-2734-4D66-A493-D7269AADBE20}
 	EndGlobalSection
 EndGlobal

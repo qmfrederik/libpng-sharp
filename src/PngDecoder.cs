@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace libpngsharp
 {
-    public class Png
+    public class PngDecoder
     {
         public Stream Stream
         {
@@ -12,7 +12,7 @@ namespace libpngsharp
             set;
         }
 
-        public unsafe void Decode()
+        public unsafe void Decode(byte[] buffer)
         {
             // C# equivalent of:
             // http://zarb.org/~gc/html/libpng.html
@@ -45,24 +45,23 @@ namespace libpngsharp
             var bytesPerRow = NativeMethods.png_get_rowbytes(png_ptr, info_ptr);
             var cb = (int)(bytesPerRow * height);
 
-            IntPtr raw_data = Marshal.AllocHGlobal(cb);
-            IntPtr row_pointers = Marshal.AllocHGlobal((int)Marshal.SizeOf<IntPtr>() * (int)height);
-
-            IntPtr currentRow = raw_data;
-            IntPtr row_pointer = row_pointers;
-
-            for (int i = 0; i < height; i++)
+            fixed (byte* ptr = buffer)
             {
-                var bytes = BitConverter.GetBytes(currentRow.ToInt64());
-                Marshal.Copy(bytes, 0, row_pointer, Marshal.SizeOf<IntPtr>());
-                currentRow += (int)bytesPerRow;
-                row_pointer += Marshal.SizeOf<IntPtr>();
+                IntPtr row_pointers = Marshal.AllocHGlobal((int)Marshal.SizeOf<IntPtr>() * (int)height);
+
+                IntPtr currentRow = new IntPtr(ptr);
+                IntPtr row_pointer = row_pointers;
+
+                for (int i = 0; i < height; i++)
+                {
+                    var bytes = BitConverter.GetBytes(currentRow.ToInt64());
+                    Marshal.Copy(bytes, 0, row_pointer, Marshal.SizeOf<IntPtr>());
+                    currentRow += (int)bytesPerRow;
+                    row_pointer += Marshal.SizeOf<IntPtr>();
+                }
+
+                NativeMethods.png_read_image(png_ptr, row_pointers);
             }
-
-            NativeMethods.png_read_image(png_ptr, row_pointers);
-
-            byte[] data = new byte[cb];
-            Marshal.Copy(raw_data, data, 0, cb);
 
             GC.KeepAlive(callback);
         }
