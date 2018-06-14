@@ -25,4 +25,4 @@ script:
 - cd libpng-sharp.Tests
 - dotnet test
 - cd ../Benchmarks
-- dotnet run -c Release
+#- dotnet run -c Release
