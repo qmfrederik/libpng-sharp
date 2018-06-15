@@ -6,6 +6,9 @@ using System.Text;
 
 namespace libpngsharp
 {
+    /// <summary>
+    /// Decodes PNG images using the libpng library.
+    /// </summary>
     public unsafe class PngDecoder : IDisposable
     {
         IntPtr version;
@@ -13,17 +16,26 @@ namespace libpngsharp
         IntPtr infoPtr;
         IntPtr endInfoPtr = IntPtr.Zero;
         NativeMethods.png_rw readCallback;
+        NativeMethods.png_error errorCallback;
+        NativeMethods.png_error warningCallback;
+        bool transformationsSaved = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PngDecoder"/> class.
+        /// </summary>
+        /// <param name="stream">
+        /// A <see cref="Stream"/> which contains a PNG image.
+        /// </param>
         public PngDecoder(Stream stream)
         {
             this.Stream = stream ?? throw new ArgumentNullException(nameof(stream));
 
             this.version = NativeMethods.png_get_libpng_ver(IntPtr.Zero);
             this.Version = Marshal.PtrToStringAnsi(this.version);
-            var error_fn = new NativeMethods.png_error(OnError);
-            var warn_fn = new NativeMethods.png_error(OnWarning);
+            this.errorCallback = new NativeMethods.png_error(OnError);
+            this.warningCallback = new NativeMethods.png_error(OnWarning);
 
-            this.pngPtr = NativeMethods.png_create_read_struct(this.version, new IntPtr(1), error_fn, warn_fn);
+            this.pngPtr = NativeMethods.png_create_read_struct(this.version, new IntPtr(1), this.errorCallback, this.warningCallback);
             ThrowOnZero(this.pngPtr);
 
             this.infoPtr = NativeMethods.png_create_info_struct(this.pngPtr);
@@ -37,17 +49,22 @@ namespace libpngsharp
             // This will process all chunks up to but not including the image data.
             NativeMethods.png_read_info(this.pngPtr, this.infoPtr);
 
-            this.Width = (int)NativeMethods.png_get_image_width(this.pngPtr, this.infoPtr);
-            this.Height = (int)NativeMethods.png_get_image_height(this.pngPtr, this.infoPtr);
-            this.BitDepth = NativeMethods.png_get_bit_depth(this.pngPtr, this.infoPtr);
-            this.Channels = NativeMethods.png_get_channels(this.pngPtr, this.infoPtr);
-            this.BytesPerRow = (int)NativeMethods.png_get_rowbytes(this.pngPtr, this.infoPtr);
-            this.ColorType = NativeMethods.png_get_color_type(this.pngPtr, this.infoPtr);
-
-            var number_of_passes = NativeMethods.png_set_interlace_handling(this.pngPtr);
-            NativeMethods.png_read_update_info(this.pngPtr, this.infoPtr);
+            this.RefreshProperties();
         }
 
+        /// <summary>
+        /// The event which is raised when an error occurs.
+        /// </summary>
+        public event EventHandler<string> Error;
+
+        /// <summary>
+        /// The event which is raised when a warning occurs.
+        /// </summary>
+        public event EventHandler<string> Warning;
+
+        /// <summary>
+        /// The <see cref="Stream"/> from which to read the PNG image.
+        /// </summary>
         public Stream Stream
         {
             get;
@@ -137,9 +154,10 @@ namespace libpngsharp
         /// </param>
         public void Decode(byte[] buffer)
         {
-            // C# equivalent of:
-            // http://zarb.org/~gc/html/libpng.html
-            // http://pulsarengine.com/2009/01/reading-png-images-from-memory/
+            if (!this.transformationsSaved)
+            {
+                this.SaveTransformations();
+            }
 
             fixed (byte* ptr = buffer)
             {
@@ -168,6 +186,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformPaletteToRgb()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_palette_to_rgb(this.pngPtr);
         }
 
@@ -176,6 +199,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformGrayTo8()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_gray_1_2_4_to_8(this.pngPtr);
         }
 
@@ -184,6 +212,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformStrip16()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_strip_16(this.pngPtr);
         }
 
@@ -192,6 +225,11 @@ namespace libpngsharp
         /// </summary>
         public void TranformStripAlpha()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_strip_alpha(this.pngPtr);
         }
 
@@ -200,6 +238,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformInvertAlpha()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_invert_alpha(this.pngPtr);
         }
 
@@ -208,6 +251,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformSetPacking()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_packing(this.pngPtr);
         }
 
@@ -216,6 +264,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformSetBgr()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_bgr(this.pngPtr);
         }
 
@@ -224,6 +277,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformSwapAlpha()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_swap_alpha(this.pngPtr);
         }
 
@@ -232,6 +290,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformGrayToRgb()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_gray_to_rgb(this.pngPtr);
         }
 
@@ -240,6 +303,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformInvertMono()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_invert_mono(this.pngPtr);
         }
 
@@ -248,6 +316,11 @@ namespace libpngsharp
         /// </summary>
         public void TransformSwap()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_swap(this.pngPtr);
         }
 
@@ -256,7 +329,30 @@ namespace libpngsharp
         /// </summary>
         public void TransformPackswap()
         {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
             NativeMethods.png_set_packswap(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Saves the transformations, and updates the properties (such as <see cref="BitDepth"/>) to match the
+        /// transformed image.
+        /// </summary>
+        /// <remarks>
+        /// You can only call <see cref="SaveTransformations"/> once. You can not call any of the <c>Transform*</c>
+        /// methods after you have saved the transformations.
+        /// </remarks>
+        public void SaveTransformations()
+        {
+            // C# equivalent of:
+            // http://zarb.org/~gc/html/libpng.html
+            // http://pulsarengine.com/2009/01/reading-png-images-from-memory/
+            NativeMethods.png_read_update_info(this.pngPtr, this.infoPtr);
+            this.transformationsSaved = true;
+            this.RefreshProperties();
         }
 
         /// <inheritdoc/>
@@ -286,14 +382,26 @@ namespace libpngsharp
 #endif
         }
 
+        private void RefreshProperties()
+        {
+            this.Width = (int)NativeMethods.png_get_image_width(this.pngPtr, this.infoPtr);
+            this.Height = (int)NativeMethods.png_get_image_height(this.pngPtr, this.infoPtr);
+            this.BitDepth = NativeMethods.png_get_bit_depth(this.pngPtr, this.infoPtr);
+            this.Channels = NativeMethods.png_get_channels(this.pngPtr, this.infoPtr);
+            this.BytesPerRow = (int)NativeMethods.png_get_rowbytes(this.pngPtr, this.infoPtr);
+            this.ColorType = NativeMethods.png_get_color_type(this.pngPtr, this.infoPtr);
+        }
+
         private void OnError(IntPtr png_structp, IntPtr png_const_charp)
         {
             var error = Marshal.PtrToStringAnsi(png_const_charp);
+            this.Error?.Invoke(this, error);
         }
 
         private void OnWarning(IntPtr png_structp, IntPtr png_const_charp)
         {
             var error = Marshal.PtrToStringAnsi(png_const_charp);
+            this.Warning?.Invoke(this, error);
         }
 
         private void ThrowOnZero(IntPtr value)
