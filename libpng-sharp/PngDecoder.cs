@@ -247,6 +247,38 @@ namespace libpngsharp
         }
 
         /// <summary>
+        /// Adds an alpha channel to an 8-bit grayscal iimage or 24-bit RGB image.
+        /// </summary>
+        public void TransformAddAlpha()
+        {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
+            NativeMethods.png_set_add_alpha(this.pngPtr);
+        }
+
+        /// <summary>
+        /// Adds a filler byte when an 8-bit grayscale image or 24-bit RGB image is read.
+        /// </summary>
+        /// <param name="filler">
+        /// The filler byte to add.
+        /// </param>
+        /// <param name="flags">
+        /// Flags controlling how to add the filler.
+        /// </param>
+        public void TransformSetFiller(uint filler, PngFillerFlags flags)
+        {
+            if (this.transformationsSaved)
+            {
+                throw new InvalidOperationException();
+            }
+
+            NativeMethods.png_set_filler(this.pngPtr, filler, flags);
+        }
+
+        /// <summary>
         /// Expands to 1 pixel per byte.
         /// </summary>
         public void TransformSetPacking()

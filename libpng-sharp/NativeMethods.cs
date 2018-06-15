@@ -220,6 +220,12 @@ namespace libpngsharp
         public static extern void png_set_invert_alpha(IntPtr png_ptr);
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_add_alpha(IntPtr png_ptr);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void png_set_filler(IntPtr png_ptr, uint filler, PngFillerFlags flags);
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         public static extern void png_set_packing(IntPtr png_ptr);
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
