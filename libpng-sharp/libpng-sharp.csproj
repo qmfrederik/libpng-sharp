@@ -10,7 +10,7 @@
     <Description>A .NET wrapper for libpng</Description>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\libpng-sharp.xml</DocumentationFile>
   </PropertyGroup>

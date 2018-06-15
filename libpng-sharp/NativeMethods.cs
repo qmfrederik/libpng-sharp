@@ -20,7 +20,7 @@ namespace libpngsharp
         /// A pointer to an instance of libpng. This can be <see cref="IntPtr.Zero"/>.
         /// </param>
         /// <returns>
-        /// The library version as a short string in the format <c>1.0.0</c> through </c>99.99.99zz</c>
+        /// The library version as a short string in the format <c>1.0.0</c> through <c>99.99.99zz</c>
         /// </returns>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr png_get_libpng_ver(IntPtr png_ptr);
